@@ -1,0 +1,70 @@
+{% extends 'main/base.html' %}
+
+{% block title%} Кур{% endblock %}
+
+{% block content%}
+<div class="d-flex flex-column gap-3">
+    {% for publication in publications %}
+
+    <div class="card position-static">
+        <div class="card-header d-flex align-content-center" style="justify-content: space-between;">
+            <h5 class="m-0">{{ publication.author_publication.username }}</h5>
+            <div>
+                <a href="/" class="d-flex align-items-center text-white text-decoration-none" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{ url_for('publication_blueprint.update_publication', id=publication.id)}}">Редактировать</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('publication_blueprint.delete_publication', id=publication.id)}}">Удалить</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ publication.title }}</h5>
+            <p class="card-text">{{ publication.content.replace('\n', '<br>')|truncate(300, False) }}</p>
+
+        </div>
+        <div class="card-footer d-flex gap-3 align-items-center">
+            <form action="{{ url_for('like_blueprint.like', publication_id=publication.id) }}" method="POST">
+                {% if publication.id in user_likes %}
+                <button type="submit" class="unlike btn btn-outline-danger"><i class="bi bi-heart-fill"></i></button>
+                {% else %}
+                <button type="submit" class="btn btn-outline-primary like"><i class="bi bi-heart"></i></button>
+                {% endif %}
+            </form>
+
+            <!-- Кнопка для показа/скрытия формы комментариев -->
+            <button class="comment btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#commentForm{{ publication.id }}" aria-expanded="false" aria-controls="commentForm{{ publication.id }}">
+                <i class="bi bi-chat-dots"></i>
+            </button>
+        </div>
+
+        <!-- Форма комментариев (используем Bootstrap Collapse) -->
+        <div class="collapse mt-3" id="commentForm{{ publication.id }}">
+            <div class="card card-body">
+                <div style="max-height: 400px; overflow-y: auto;" class="p-3">
+                    {% for comment in comments %}
+                    <p><strong>{{ comment.author_comment.username }}</strong></p>
+                    <p>{{ comment.content }}</p>
+                    <hr>
+                    {% endfor %}
+                </div>
+
+                <hr>
+
+                <form method="post" action="{{ url_for('comment_blueprint.comment', publication_id=publication.id) }}">
+                    {{ form.csrf_token }}
+                    {{ form.content.label(class="m-1") }}
+                    <div class="d-flex">
+                        {{ form.content(class="form-control me-2", placeholder="Ваш комментарий") }}
+                        {{ form.submit(class="btn btn-success w-25") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

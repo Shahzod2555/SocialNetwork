@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+
+{% block title %} new post {% endblock %}
+
+{% block content %}
+
+    <form method="POST" class="form-control">
+
+        <div class="m-3">
+            <label for="title" class="form-label">Название поста</label>
+            <input id="title" name="title" class="form-control" placeholder="Название поста">
+        </div>
+
+        <div class="m-3">
+            <label for="content" class="form-label">Публикация</label>
+            <textarea id="content" name="content" class="form-control" placeholder="Публикация"></textarea>
+        </div>
+
+        <div class="m-3">
+            <label for="file" class="form-label">Файл</label>
+            <input type="file" class="form-control" id="file" name="file"  accept="*/*">
+        </div>
+
+        <div class="m-3">
+          <button type="submit" class="btn w-100 btn-primary">Создать публикацию</button>
+        </div>
+    </form>
+{% endblock %}
