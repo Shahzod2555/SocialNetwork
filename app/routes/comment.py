@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect
+from flask import Blueprint, redirect, flash, request
 from flask_login import login_required, current_user
 
 from ..forms import CommentAdd
@@ -13,15 +13,18 @@ def comment(publication_id):
     form = CommentAdd()
 
     if form.validate_on_submit():
-        author = current_user.id
-        new_comment = Comment(author=author, content=form.content.data, publication=publication_id)
-
+        new_comment = Comment(
+            author=current_user.id,
+            content=form.content.data,
+            publication=publication_id
+        )
         try:
             db.session.add(new_comment)
             db.session.commit()
-            return redirect('/')
+            return redirect(request.referrer or "/")
         except Exception as e:
+            flash("Ошибка при добовлении комментария", 'error')
             print(f"Ошибка при создании публикации: {e}")
-            return redirect('/')
+            return redirect(request.referrer or "/")
 
-    return redirect('/')
+    return redirect(request.referrer or "/")

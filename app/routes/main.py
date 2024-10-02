@@ -1,9 +1,9 @@
-from ..model.comment import Comment
 from ..forms import CommentAdd
+from sqlalchemy.sql.expression import func
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 
-from ..model.like import Like
+from ..functions import get_publication_data
 from ..model.publication import Publication
 
 main = Blueprint('main_blueprint', __name__)
@@ -11,15 +11,15 @@ main = Blueprint('main_blueprint', __name__)
 @main.route('/')
 @login_required
 def index():
-    publications = Publication.query.order_by(Publication.updated_at.desc()).all()
+    publications = Publication.query.order_by(func.random()).all()
 
-    user_likes = [like.publication for like in Like.query.filter_by(author=current_user.id).all()]
-    comment = Comment.query.order_by(Comment.created_at.desc()).all()
+    publications1, user_likes, publication_comments = get_publication_data(publications=publications)
 
     return render_template(
-        template_name_or_list='main/index.html',
+        'main/index.html',
         publications=publications,
         user_likes=user_likes,
         form=CommentAdd(),
-        comments=comment
+        publication_comment=publication_comments,
+        author=current_user,
     )

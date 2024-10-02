@@ -2,7 +2,11 @@ import os
 
 
 class Config(object):
-    ROOT = os.path.abspath('app') + '/media/avatar/'
+    APPNAME = 'app'
+    ROOT = os.path.abspath(APPNAME)
+    UPLOAD_PATH = '/media/avatar/'
+    SERVER_PATH = ROOT + UPLOAD_PATH
+
     USER = os.environ.get('POSTGRES_USER', 'Shahzod008')
     PASSWORD = os.environ.get('POSTGRES_PASSWORD', 'Shahzod2008')
     HOST = os.environ.get('POSTGRES_HOST', '127.0.0.1')

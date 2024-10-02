@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect
+from flask import Blueprint, redirect, request, url_for
 from flask_login import login_required, current_user
 
 from ..extentions import db
@@ -10,19 +10,18 @@ like_blueprint = Blueprint('like_blueprint', __name__)
 @login_required
 def like(publication_id):
     author = current_user.id
+
     existing_like = Like.query.filter_by(author=author, publication=publication_id).first()
-    new_like = Like(author=author, publication=publication_id)
 
     try:
         if existing_like:
             db.session.delete(existing_like)
             db.session.commit()
-            return redirect('/')
         else:
+            new_like = Like(author=author, publication=publication_id)
             db.session.add(new_like)
             db.session.commit()
-            return redirect('/')
     except Exception as e:
         print(f"Ошибка при создании публикации: {e}")
 
-    return redirect('/')
+    return redirect(request.referrer or "/")
