@@ -1,9 +1,8 @@
 from flask_admin.contrib.sqla import ModelView
 from flask_login import login_manager
-from flask_admin import Admin
 from flask import Flask
 
-from .extentions import db, migrate, login_manager
+from .extentions import db, migrate, login_manager, admin
 from .config import Config
 
 from .model.publication import Publication
@@ -24,9 +23,9 @@ from .routes.user import user
 from .utils import utils_blueprint
 
 
+
 def create_app(config_class=Config):
     app = Flask(__name__)
-    admin = Admin(app, name='MyAdmin', template_mode='bootstrap4')
 
     app.config.from_object(config_class)
 
@@ -42,6 +41,7 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     migrate.init_app(app, db)
+    admin.init_app(app)
 
     login_manager.init_app(app)
     login_manager.login_view = 'reg_auth_blueprint.login'

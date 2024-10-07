@@ -1,6 +1,6 @@
 from ..forms import CommentAdd
 from sqlalchemy.sql.expression import func
-from flask import Blueprint, render_template, jsonify, request
+from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 
 from ..functions import get_publication_data

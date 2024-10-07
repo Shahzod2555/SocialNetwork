@@ -1,4 +1,5 @@
 from datetime import datetime
+from email.policy import default
 
 from flask_login import UserMixin
 
@@ -26,7 +27,7 @@ class User(db.Model, UserMixin):
     phone = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     bio = db.Column(db.Text, nullable=True)
-    avatar = db.Column(db.String, nullable=False)
+    avatar = db.Column(db.String, nullable=False, default="ava.svg")
     password = db.Column(db.String(255), nullable=False)
 
     subscription = db.relationship('Subscription', foreign_keys='Subscription.subscription_id', backref='subscription', lazy='dynamic')

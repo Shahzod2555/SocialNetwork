@@ -1,35 +1,26 @@
 <nav class="navbar bg-body-tertiary mb-3 ">
   <div class="container-fluid container">
-
     <a class="navbar-brand" href="/">Social Network</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
+    {% if current_user.is_authenticated %}
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
     <div class="flex-column flex-shrink-0 p-2 offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" style="max-width: 280px;">
-
       <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Social Network</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
-
       <hr>
-
       <div class="d-flex flex-column flex-shrink-0 text-bg-dark mb-auto">
         <ul class="nav nav-pills flex-column">
-
           <li class="nav-item">
             <a href="/" class="nav-link text-white">
               Главная
             </a>
           </li>
-
           <li>
             <a href="{{ url_for('message_blueprint.chat_view')}}" class="nav-link text-white">
               Чат
             </a>
           </li>
-
           <li>
             <a href="{{ url_for('publication_blueprint.create_publication')}}" class="nav-link text-white">
               Публикация
@@ -37,25 +28,15 @@
           </li>
         </ul>
       </div>
-
       <hr>
-
       <div class="btn-group dropup">
-        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-{% if current_user.is_authenticated %}
-    <img class="rounded-circle me-2" width="32" height="32" src="{{ url_for('utils_blueprint.media_files', filename='avatar/' + current_user.avatar) }}" alt="{{ current_user.username }}'s avatar">
-{% else %}
-    <img class="rounded-circle me-2" width="32" height="32" src="{{ url_for('utils_blueprint.media_files', filename='avatar/default.png') }}" alt="Default avatar">
-{% endif %}
-          <strong>{{current_user.username}}</strong>
-        </a>
+        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><img class="rounded-circle me-2" width="32" height="32" src="{{ url_for('utils_blueprint.media_files', filename='avatar/' + current_user.avatar) }}" alt="{{ current_user.username }}'s avatar"><strong>{{current_user.username}}</strong></a>
         <ul class="dropdown-menu">
           <li><a class="dropdown-item" href="{{url_for('user_blueprint.profile', user_id=current_user.id)}}">Профиль</a></li>
           <li><a class="dropdown-item" href="{{url_for('reg_auth_blueprint.logout')}}"><i class="bi bi-box-arrow-left m-1"></i>Выйти</a></li>
         </ul>
       </div>
-
     </div>
-
+    {% endif %}
   </div>
 </nav>
