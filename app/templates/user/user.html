@@ -5,29 +5,34 @@
 {% block content%}
 <div class="row mb-2 pb-2 border-bottom">
     <div class="col" style="text-align: center;">
-		<img class="round" src="{{url_for('static', filename='image/ava.svg')}}" alt="user" style="width: 140px;">
+		<img class="border border-3 m-1 p-1" style="border-color: linear-gradient(#ff7e5f, #feb47b); height: 100px; border-radius: 50%;" src="{{ url_for('utils_blueprint.media_files', filename='avatar/' + author.avatar) }}" alt="{{ author.username }}'s avatar">
 		<h3>{{author.username}}</h3>
 		<p style="max-width: 300px; margin: auto;">{{author.bio}}</p>
     </div>
     <div class="col">
 		<div style="height: 50%;  align-items: center;" class="row">
 			<div class="col">
-				<p>{{ following_count }}</p>
+				<p>{{ subscription_count }}</p>
 				<p>Подписки</p>
 			</div>
 			<div class="col">
-				<p>{{ followers_count }}</p>
+				<p>{{ subscribers_count }}</p>
 				<p>Подписчики</p>
 			</div>
 			<div class="col">
-				<p>{{ publication_count }}</p>
+				<p>{{publication_count}}</p>
 				<p>публикации</p>
 			</div>
 		</div>
 		<div style="height: 50%; align-items: center;" class="d-flex gap-2">
 			<a class="btn btn-outline-secondary" href="{{url_for('message_blueprint.chat_view')}}" style="width: 100%;" role="button">Message</a>
-			<form action=" {% if current_user.is_following(author) %} {{ url_for('follow_blueprint.unfollow_user', user_id=author.id) }} {% else %} {{ url_for('follow_blueprint.follow_user', user_id=author.id) }} {% endif %}" method="POST">
-				{% if current_user.is_following(author) %}
+			<form action="
+			{% if current_user.is_subscription(author) %}
+			{{ url_for('subscription_blueprint.un_subscription_user', user_id=author.id) }}
+			{% else %}
+			{{ url_for('subscription_blueprint.subscription_user', user_id=author.id) }}
+			{% endif %}" method="POST">
+				{% if current_user.is_subscription(author) %}
 				<button type="submit" class="btn btn-danger">Отписаться</button>
 				{% else %}
 				<button type="submit" class="btn btn-primary">Подписаться</button>
@@ -38,20 +43,20 @@
 </div>
 
 
-<h3>Подписки:</h3>
-<ul>
-    {% for following in author.following %}
-        <li>{{ following.followed.username }}</li>
-    {% endfor %}
-</ul>
 
 <h3>Подписчики:</h3>
 <ul>
-    {% for follower in author.followers %}
-        <li>{{ follower.follower.username }}</li>
+    {% for subscription in author.subscribers %}
+        <li>{{ subscription.subscribers.username }}</li>
     {% endfor %}
 </ul>
 
+<h3>Подписки:</h3>
+<ul>
+    {% for subscription in author.subscription %}
+        <li>{{ subscription.subscription.username }}</li>
+    {% endfor %}
+</ul>
 
 <div class="d-flex pt-2 pb-2 border-bottom mb-3" style="overflow-x: auto; min-width: 100%;">
 	{% for i in range(19) %}

@@ -19,8 +19,8 @@ def profile():
         form=CommentAdd(),
         publication_comment=publication_comments,
         author=current_user,
-        following_count=current_user.following_count(),
-        followers_count=current_user.followers_count(),
+        subscription_count=current_user.subscription_count(),
+        subscribers_count=current_user.subscribers_count(),
         publication_count=current_user.publication_count()
     )
 
@@ -37,7 +37,7 @@ def user_profile(user_id):
         form=CommentAdd(),
         publication_comment=publication_comments,
         author=user_us,
-        following_count=user_us.following_count(),
-        followers_count=user_us.followers_count(),
+        subscription_count=user_us.subscription_count(),
+        subscribers_count=user_us.subscribers_count(),
         publication_count = user_us.publication_count()
     )

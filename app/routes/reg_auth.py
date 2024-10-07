@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, render_template, flash, request
 from flask_login import current_user, login_user, logout_user
 from ..forms import RegistrationForm, LoginForm
 from ..extentions import db, bcrypt
-from ..functions import save_picture
+from ..functions import save_ava_picture
 from ..model.user import User
 
 reg_auth = Blueprint('reg_auth_blueprint', __name__)
@@ -12,12 +12,13 @@ def register():
     if current_user.is_authenticated:
         next_page = request.args.get('next')
         return redirect(next_page) if next_page else redirect('/')
+
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 
         if form.avatar.data:
-            avatar = save_picture(form.avatar.data)
+            avatar = save_ava_picture(form.avatar.data)
         else:
             avatar = 'ava.svg'
 

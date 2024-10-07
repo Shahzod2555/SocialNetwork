@@ -4,25 +4,48 @@
 
 {% block content %}
 
-    <form method="POST" class="form-control">
+<div class="container mt-5 mb-5">
+<h2 class="text-center mb-4">Редактирование {{publication_id.title}}</h2>
 
-        <div class="m-3">
-            <label for="title" class="form-label">Название поста</label>
-            <input id="title" value="{{publication.title }}" name="title" class="form-control" placeholder="Название поста">
+<form method="POST" enctype="multipart/form-data" class="p-4 form-control m-auto shadow-sm">
+    {{ form.csrf_token }}
+
+        <div class="m-4">
+            {{ form.title.label }}
+            {{ form.title(class="form-control", placeholder="Название поста", value=publication_id.title)}}
         </div>
-
-        <div class="m-3">
-            <label for="content" class="form-label">Публикация</label>
-            <textarea id="content" name="content" class="form-control" placeholder="Публикация">{{publication.content }}</textarea>
+        <div class="m-4">
+            {{ form.content.label }}
+            {{ form.content(class="form-control", placeholder="Статья")}}
         </div>
-
-        <div class="m-3">
-            <label for="file" class="form-label">Файл</label>
-            <input type="file" value="{{publication.file }}" class="form-control" id="file" name="file"  accept="*/*">
+        <div class="m-4">
+            {{ form.hashtags.label }}
+            {{ form.hashtags(class="form-control", placeholder="Хештеги", value=publication_id.hashtags)}}
         </div>
-
-        <div class="m-3">
-          <button type="submit" class="btn w-100 btn-primary">Создать публикацию</button>
+        <div class="m-4">
+            {{ form.image.label }}
+            {{ form.image(class="form-control")}}
+        </div>
+        <div class="m-4">
+            {{ form.video.label }}
+            {{ form.video(class="form-control")}}
+        </div>
+        <div class="m-4">
+            {{ form.audio.label }}
+            {{ form.audio(class="form-control")}}
+        </div>
+        <div class="m-4">
+            {{ form.location.label }}
+            {{ form.location(class="form-control", placeholder="Название поста", value=publication_id.location)}}
+        </div>
+        <div class="m-4">
+            {{ form.mentions.label }}
+            {{ form.mentions(class="form-control", placeholder="Упоминуть пользователя", value=publication_id.mentions)}}
+        </div>
+        <div class="m-4">
+            {{ form.submit(class="btn btn-success w-100")}}
         </div>
     </form>
+</div>
+
 {% endblock %}
