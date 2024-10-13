@@ -4,12 +4,12 @@
 		<div class="card-header d-flex align-content-center" style="justify-content: space-between;">
 			{% if current_user == publication.author_publication %}
 			<div class=" d-flex gap-2 align-items-center">
-				<img class="round" src="{{url_for('media_files', filename='avatar/' + publication.author_publication.avatar)}}" alt="user" style="width: 30px; border-radius: 50%;">
+				<img class="round" src="{{url_for('utils_blueprint.media_files', filename='avatar/' + publication.author_publication.avatar)}}" alt="user" style="width: 30px; border-radius: 50%;">
 				<a href="{{url_for('user_blueprint.profile')}}" class="m-0 fw-bold">{{ publication.author_publication.username }}</a>
 			</div>
 			{% else %}
 			<div class="d-flex gap-2">
-				<img class="round" src="{{url_for('media_files', filename='avatar/' + publication.author_publication.avatar)}}" alt="user" style="width: 30px; border-radius: 50%;">
+				<img class="round" src="{{url_for('utils_blueprint.media_files', filename='avatar/' + publication.author_publication.avatar)}}" alt="user" style="width: 30px; border-radius: 50%;">
 				<div>
 					<a href="{{url_for('user_blueprint.user_profile', user_id=publication.author_publication.id)}}" class="m-0 fw-bold">{{ publication.author_publication.username }}</a>
 					<form method="POST" action="
@@ -33,32 +33,33 @@
 					<i class="bi bi-three-dots-vertical"></i>
 				</a>
 				<ul class="dropdown-menu">
-					<li><a class="dropdown-item" href="{{ url_for('publication_blueprint.update_publication', id=publication.id)}}">Редактировать</a></li>
-					<li><a class="dropdown-item" href="{{ url_for('publication_blueprint.delete_publication', id=publication.id)}}">Удалить</a></li>
+					<li><a class="dropdown-item" href="{{ url_for('publication_blueprint.publication_update', id_publication=publication.id)}}">Редактировать</a></li>
+					<li><a class="dropdown-item" href="{{ url_for('publication_blueprint.publication_delete', id_publication=publication.id)}}">Удалить</a></li>
 				</ul>
 			</div>
 			{% endif %}
 		</div>
 		<div class="card-body">
 			{% if publication.image %}
-			<img style="width: 100%;" src="{{ url_for('media_files', filename='publication_image/' + publication.image) }}" alt="{{publication.image}}">
+			<img style="width: 100%;" src="{{ url_for('utils_blueprint.media_files', filename='publication_image/' + publication.image) }}" alt="{{publication.image}}">
 			{% endif %}
 
 			{% if publication.video %}
 			<hr>
 			<div class="video-container">
 				<video id="video{{ publication.id }}" class="publication-video" style="width: 100%;" muted>
-					<source src="{{ url_for('media_files', filename='publication_video/' + publication.video) }}">
+					<source src="{{ url_for('utils_blueprint.media_files', filename='publication_video/' + publication.video) }}">
 				</video>
 				<button id="playPauseButton{{ publication.id }}" class="mute-btn" style="background: rgba(0, 0, 0, 0.5); border: none; padding: 5px 10px;">▶️</button>
 				<button id="muteButton{{ publication.id }}" class="mute-btn" style="background: rgba(0, 0, 0, 0.5); border: none; padding: 5px 10px;">🔇</button>
 			</div>
 			<hr>
 			{% endif %}
-		<a href="{{url_for('publication_blueprint.publication_view', id=publication.id)}}">
-
-			<h5 class="card-title">{{ publication.title }}</h5>
-			<p class="card-text">{{ publication.content.replace('\n', '<br>')|truncate(300, False) }}</p>
+		<a href="{{url_for('publication_blueprint.publication_view', id_publication=publication.id)}}">
+			<p class="card-title">{{ publication.title }}</p>
+			{% if publication.content %}
+				<p class="card-text">{{ publication.content.replace('\n', '<br>') | truncate(300, False) }}</p>
+			{% endif %}
 		</a>
 		</div>
 		<div class="card-footer d-flex gap-3 align-items-center">
@@ -166,3 +167,4 @@
         });
     });
 </script>
+

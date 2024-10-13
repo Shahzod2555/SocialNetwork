@@ -5,7 +5,6 @@ from .viewing import Viewing
 from .like import Like
 
 from ..extentions import db
-import logging
 
 
 class Publication(db.Model):
@@ -29,8 +28,8 @@ class Publication(db.Model):
     mentions = db.Column(db.String(255), nullable=True)
 
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
 
     def like_count(self):
@@ -44,7 +43,7 @@ class Publication(db.Model):
 
     def publish(self):
         self.is_published = True
-        self.updated_at = datetime.utcnow()
+        self.updated_at = datetime.now()
         db.session.commit()
 
     def record_view(self, user_id):
@@ -53,9 +52,6 @@ class Publication(db.Model):
             new_view = Viewing(user=user_id, publication=self.id)
             db.session.add(new_view)
             db.session.commit()
-            print(f"View recorded for publication {self.id} by user {user_id}")
-        else:
-            print(f"View already exists for publication {self.id} by user {user_id}")
 
     def get_viewers(self):
         return Viewing.query.filter_by(publication_id=self.id).all()

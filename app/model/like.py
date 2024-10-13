@@ -8,4 +8,4 @@ class Like(db.Model):
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
     publication = db.Column(db.Integer, db.ForeignKey('publication.id', ondelete='CASCADE'))
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now)

@@ -12,7 +12,8 @@ main = Blueprint('main_blueprint', __name__)
 @main.route('/')
 @login_required
 def index():
-    publications = Publication.query.order_by(func.random()).all()
+
+    publications = Publication.query.filter_by(is_published=True).order_by(func.random()).all()
 
     for publication in publications:
         publication.record_view(user_id=current_user.id)

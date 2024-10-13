@@ -37,15 +37,15 @@
 					<i class="bi bi-three-dots-vertical"></i>
 				</a>
 				<ul class="dropdown-menu">
-					<li><a class="dropdown-item" href="{{ url_for('publication_blueprint.update_publication', id=publication.id)}}">Редактировать</a></li>
-					<li><a class="dropdown-item" href="{{ url_for('publication_blueprint.delete_publication', id=publication.id)}}">Удалить</a></li>
+					<li><a class="dropdown-item" href="{{ url_for('publication_blueprint.publication_update', id_publication=publication.id)}}">Редактировать</a></li>
+					<li><a class="dropdown-item" href="{{ url_for('publication_blueprint.publication_delete', id_publication=publication.id)}}">Удалить</a></li>
 				</ul>
 			</div>
 			{% endif %}
 		</div>
 		<div class="card-body">
 			{% if publication.image %}
-			<img style="width: 100%;" src="{{ url_for('media_files', filename='publication_image_video/' + publication.image) }}" alt="{{publication.image}}">
+			<img style="width: 100%;" src="{{ url_for('utils_blueprint.media_files', filename='publication_image_video/' + publication.image) }}" alt="{{publication.image}}">
 			{% endif %}
 			<h5 class="card-title">{{ publication.title }}</h5>
 			<p class="card-text">{{ publication.content }}</p>

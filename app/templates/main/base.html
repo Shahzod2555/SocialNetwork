@@ -12,18 +12,19 @@
     <header class="header">{% include 'main/_header.html'%}</header>
     <main class="container">
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <div class="flash-messages">
-      {% for category, message in messages %}
-        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-{% endwith %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
 
         {% block content%}
         {% endblock %}
@@ -31,14 +32,14 @@
 
 
     <script>
-  // Автоматическое закрытие сообщений flash через 5 секунд
+  // Автоматическое закрытие сообщений flash через 3 секунд
   setTimeout(function() {
     let alerts = document.querySelectorAll('.alert');
     alerts.forEach(function(alert) {
       let bsAlert = new bootstrap.Alert(alert);
       bsAlert.close();
     });
-  }, 2000); // Время в миллисекундах (5 секунд)
+  }, 3000); // Время в миллисекундах (3 секунд)
 </script>
 
 

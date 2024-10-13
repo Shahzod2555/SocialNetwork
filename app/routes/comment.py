@@ -23,7 +23,7 @@ def comment(publication_id):
             db.session.commit()
             return redirect(request.referrer or "/")
         except Exception as e:
-            flash("Ошибка при добовлении комментария", 'error')
+            flash("Ошибка при добавлении комментария", 'danger')
             print(f"Ошибка при создании публикации: {e}")
             return redirect(request.referrer or "/")
 

@@ -38,20 +38,6 @@ body{
     color: red;
 }
 
-.flash {padding: 10px;}
-
-.flash.success {
-    color: #13795b;
-    border: 1px solid #21DB56;
-    background: #AEFFC5;
-}
-
-.flash.error {
-    border: 1px solid #FF4343;
-    background: #FF9C9C;
-}
-
-
 a{
     color: #dee2e6;
     text-decoration: none;

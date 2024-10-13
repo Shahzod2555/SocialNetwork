@@ -1,6 +1,8 @@
 {% extends 'main/base.html' %}
 
-{% block title%}{{author.username}}{% endblock %}
+{% block title%}
+{{author.username}}
+{% endblock %}
 
 {% block content%}
 <div class="row mb-2 pb-2 border-bottom">
@@ -52,7 +54,6 @@
 	</div>
 	{% endfor %}
 </div>
-
 
 {% include 'publication/publication.html' %}
 

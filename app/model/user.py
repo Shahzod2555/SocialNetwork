@@ -1,5 +1,4 @@
 from datetime import datetime
-from email.policy import default
 
 from flask_login import UserMixin
 
@@ -33,7 +32,7 @@ class User(db.Model, UserMixin):
     subscription = db.relationship('Subscription', foreign_keys='Subscription.subscription_id', backref='subscription', lazy='dynamic')
     subscribers = db.relationship('Subscription', foreign_keys='Subscription.subscribers_id', backref='subscribers', lazy='dynamic')
 
-    date_joined = db.Column(db.DateTime, default=datetime.utcnow)
+    date_joined = db.Column(db.DateTime, default=datetime.now)
 
     def __init__(self, username, password, email, phone, avatar) -> None:
         self.username: str = username

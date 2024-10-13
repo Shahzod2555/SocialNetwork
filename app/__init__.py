@@ -2,7 +2,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_login import login_manager
 from flask import Flask
 
-from .extentions import db, migrate, login_manager, admin
+from .extentions import db, migrate, login_manager, admin, mail
 from .config import Config
 
 from .model.publication import Publication
@@ -20,8 +20,7 @@ from .routes.message import message_view
 from .routes.subscription import subscription
 from .routes.main import main
 from .routes.user import user
-from .utils import utils_blueprint
-
+from .routes.utils import utils_blueprint
 
 
 def create_app(config_class=Config):
@@ -42,10 +41,13 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
     admin.init_app(app)
+    mail.init_app(app)
+
 
     login_manager.init_app(app)
     login_manager.login_view = 'reg_auth_blueprint.login'
     login_manager.login_message = "Вы не можете получить доступ к данной странице."
+    login_manager.login_message_category = "danger"
 
     with app.app_context():
         db.create_all()

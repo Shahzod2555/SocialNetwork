@@ -16,7 +16,7 @@ def subscription_user(user_id):
         return redirect(request.referrer or url_for('user_blueprint.profile', user_id=user.id))
 
     if current_user.is_subscription(user):
-        flash(f'Вы уже подписаны на {user.username}', 'info')
+        flash(f'Вы уже подписаны на {user.username}', 'success')
         return redirect(request.referrer or url_for('user_blueprint.profile', user_id=user.id))
 
     current_user.subscription_add(user)
@@ -31,7 +31,7 @@ def un_subscription_user(user_id):
     user = User.query.get_or_404(user_id)
 
     if not current_user.is_subscription(user):
-        flash(f'Вы не подписаны на {user.username}', 'info')
+        flash(f'Вы не подписаны на {user.username}', 'success')
         return redirect(request.referrer or url_for('user_blueprint.profile', user_id=user.id))
 
     current_user.un_subscription(user)

@@ -15,7 +15,7 @@
     {{ form.password(class="form-control", placeholder="Пароль")}}
     </div>
     <div class="m-4">
-    <p>Нету аккаунта? <a style="color: #007bff;" href="{{ url_for('reg_auth_blueprint.register')}}">Зарегистрироваться</a></p>
+    <p>Нету аккаунта? <a style="color: #007bff;" href="{{ url_for('reg_auth_blueprint.email_register')}}">Зарегистрироваться</a></p>
     </div>
     <div class="m-4">
     {{ form.submit(class="btn btn-success w-100")}}

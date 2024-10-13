@@ -1,44 +1,30 @@
 from flask import Blueprint, render_template, request, redirect, flash
+from ..functions import get_publication_data, save_media
+from ..forms import PublicationCreate, PublicationUpdate
 from flask_login import login_required, current_user
-from ..functions import get_publication_data, save_image_publication, save_video_publication, save_audio_publication
+from ..model.publication import Publication
 from ..forms import CommentAdd
 from ..extentions import db
-from ..forms import PublicationCreate, PublicationUpdate
-from ..model.publication import Publication
 
 
 publication = Blueprint('publication_blueprint', __name__)
 
+
 @publication.route('/publication/create', methods=['POST', 'GET'])
 @login_required
-def create_publication():
+def publication_create():
     form = PublicationCreate()
 
     if form.validate_on_submit():
-
-        if form.image.data:
-            image = save_image_publication(form.image.data)
-        else:
-            image = None
-
-        if form.video.data:
-            video = save_video_publication(form.video.data)
-        else:
-            video = None
-
-        if form.audio.data:
-            audio = save_audio_publication(form.audio.data)
-        else:
-            audio = None
-
         new_publication = Publication(
             title=form.title.data,
             author=current_user.id,
             content=form.content.data,
             hashtags=form.hashtags.data,
-            image=image,
-            video=video,
-            audio=audio,
+            is_published=form.is_publication.data,
+            image=save_media(form.image.data, "SERVER_PATH_PUBLICATION_IMAGE") if form.image.data else None,
+            video=save_media(form.video.data, "SERVER_PATH_PUBLICATION_VIDEO") if form.video.data else None,
+            audio=save_media(form.audio.data, "SERVER_PATH_PUBLICATION_AUDIO") if form.audio.data else None,
             location=form.location.data,
             mentions=form.mentions.data,
         )
@@ -55,44 +41,27 @@ def create_publication():
         return render_template('publication/create.html', form=form)
 
 
-@publication.route('/publication/update/<int:id>', methods=['POST', 'GET'])
+@publication.route('/publication/update/<int:id_publication>',
+                   methods=['POST', 'GET'])
 @login_required
-def update_publication(id):
-    publication_id = Publication.query.get_or_404(id)
+def publication_update(id_publication):
+    publication_id = Publication.query.get_or_404(id_publication)
     form = PublicationUpdate()
 
-    if publication_id.author != current_user:
+    if publication_id.author == current_user.id:
         flash("У вас нет доступа к этой публикации", "danger")
         return redirect(request.referrer or "/")
 
     if request.method == 'GET':
         form.content.data = publication_id.content
-        form.image.data = publication_id.image
-        form.video.data = publication_id.video
-        form.audio.data = publication_id.audio
 
     if form.validate_on_submit():
-        if form.image.data:
-            image = save_image_publication(form.image.data)
-        else:
-            image = None
-
-        if form.video.data:
-            video = save_video_publication(form.video.data)
-        else:
-            video = None
-
-        if form.audio.data:
-            audio = save_audio_publication(form.audio.data)
-        else:
-            audio = None
-
         publication_id.title = form.title.data
         publication_id.content = form.content.data
         publication_id.hashtags = form.hashtags.data
-        publication_id.image = image if image else publication_id.image
-        publication_id.video = video if video else publication_id.video
-        publication_id.audio = audio if audio else publication_id.audio
+        publication_id.image = save_media(form.image.data, "SERVER_PATH_PUBLICATION_IMAGE") if form.image.data else publication_id.image
+        publication_id.video = save_media(form.video.data, "SERVER_PATH_PUBLICATION_VIDEO") if form.video.data else publication_id.video
+        publication_id.audio = save_media(form.audio.data, "SERVER_PATH_PUBLICATION_AUDIO") if form.audio.data else publication_id.audio
         publication_id.location = form.location.data
         publication_id.mentions = form.mentions.data
 
@@ -102,7 +71,7 @@ def update_publication(id):
             return redirect(request.referrer or "/")
         except Exception as e:
             print(f"Ошибка при создании публикации: {e}")
-            flash("При создании публикации произошла ошибка", "danger")
+            flash("При обновлении публикации произошла ошибка", "danger")
             return redirect(request.referrer or "/")
 
     return render_template(
@@ -111,21 +80,25 @@ def update_publication(id):
     )
 
 
-@publication.route('/publication/delete/<int:id>', methods=['POST', 'GET'])
+@publication.route(rule='/publication/delete/<int:id_publication>', methods=['POST', 'GET'])
 @login_required
-def delete_publication(id):
-    publication_id = Publication.query.get(id)
-    try:
-        db.session.delete(publication_id)
-        db.session.commit()
-        return redirect('/')
-    except Exception as e:
-        print(f"Ошибка при создании публикации: {e}")
+def publication_delete(id_publication):
+    publication_id = Publication.query.get(id_publication)
+
+    if publication_id.author == current_user.id:
+        try:
+            db.session.delete(publication_id)
+            db.session.commit()
+            return redirect('/')
+        except Exception as e:
+            print(f"Ошибка при создании публикации: {e}")
+    else:
+        return redirect('/'), flash("Соси хуй", "danger")
 
 
-@publication.route('/publication/<int:id>', methods=['POST', 'GET'])
-def publication_view(id):
-    publication12 = Publication.query.get_or_404(id)
+@publication.route(rule='/publication/<int:id_publication>',  methods=['POST', 'GET'])
+def publication_view(id_publication):
+    publication12 = Publication.query.get_or_404(id_publication)
     publication12.record_view(user_id=current_user.id)
 
     publications1, user_likes, publication_comments = get_publication_data(publications=[publication12])

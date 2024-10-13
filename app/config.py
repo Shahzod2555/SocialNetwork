@@ -1,7 +1,8 @@
 import os
 
 
-class Config(object):
+
+class Config():
     APPNAME = 'app'
     ROOT = os.path.abspath(APPNAME)
     UPLOAD_PATH = '/media/avatar/'
@@ -12,6 +13,15 @@ class Config(object):
     SERVER_PATH_PUBLICATION_IMAGE = ROOT + UPLOAD_PATH_PUBLICATION_IMAGE
     SERVER_PATH_PUBLICATION_VIDEO = ROOT + UPLOAD_PATH_PUBLICATION_VIDEO
     SERVER_PATH_PUBLICATION_AUDIO = ROOT + UPLOAD_PATH_PUBLICATION_AUDIO
+
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USERNAME = 'shahzod9966636043@gmail.com'
+    MAIL_DEFAULT_SENDER = 'shahzod9966636043@gmail.com'
+    MAIL_PASSWORD = 'mbqv vqnk yvno ijqh'
+    MAIL_USE_TLS = True
+    MAIL_USE_SSL = False
+
 
     USER = os.environ.get('POSTGRES_USER', 'Shahzod008')
     PASSWORD = os.environ.get('POSTGRES_PASSWORD', 'Shahzod2008')
