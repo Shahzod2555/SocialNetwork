@@ -30,9 +30,11 @@
       </div>
       <hr>
       <div class="btn-group dropup">
-        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><img class="rounded-circle me-2" width="32" height="32" src="{{ url_for('utils_blueprint.media_files', filename='avatar/' + current_user.avatar) }}" alt="{{ current_user.username }}'s avatar"><strong>{{current_user.username}}</strong></a>
+        <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <img class="rounded-circle me-2" width="32" height="32" src="{{ url_for('utils_blueprint.media_files', filename='avatar/' + current_user.avatar) }}" alt="{{ current_user.username }}'s avatar">
+          <strong>{{current_user.username}}</strong></a>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="{{url_for('user_blueprint.profile', user_id=current_user.id)}}">Профиль</a></li>
+          <li><a class="dropdown-item" href="{{url_for('user_blueprint.profile')}}">Профиль</a></li>
           <li><a class="dropdown-item" href="{{url_for('reg_auth_blueprint.logout')}}"><i class="bi bi-box-arrow-left m-1"></i>Выйти</a></li>
         </ul>
       </div>

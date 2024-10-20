@@ -8,6 +8,7 @@ from .subscription import Subscription
 from .like import Like
 from .viewing import Viewing
 from ..extentions import db, login_manager
+from .actual import Actual
 
 
 @login_manager.user_loader
@@ -18,13 +19,19 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
 
     publication = db.relationship(Publication, backref='author_publication', cascade='all, delete-orphan', passive_deletes=True)
+    actual = db.relationship('Actual', backref='author_actual', cascade='all, delete-orphan', passive_deletes=True)
     comment = db.relationship(Comment, backref='author_comment', cascade='all, delete-orphan', passive_deletes=True)
     like = db.relationship(Like, backref='author_like', cascade='all, delete-orphan', passive_deletes=True)
     viewing = db.relationship(Viewing, backref='author_viewing', cascade='all, delete-orphan', passive_deletes=True)
 
+    first_name = db.Column(db.String(50), nullable=True)
+    last_name = db.Column(db.String(50), nullable=True)
+    middle_name = db.Column(db.String(50), nullable=True)
+
     username = db.Column(db.String(50), unique=True, nullable=False)
     phone = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
+
     bio = db.Column(db.Text, nullable=True)
     avatar = db.Column(db.String, nullable=False, default="ava.svg")
     password = db.Column(db.String(255), nullable=False)
@@ -34,10 +41,13 @@ class User(db.Model, UserMixin):
 
     date_joined = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, username, password, email, phone, avatar) -> None:
+    def __init__(self, username, password, email, phone, avatar, first_name, middle_name, last_name) -> None:
         self.username: str = username
         self.password: str = password
         self.phone: str = phone
+        self.first_name: str = first_name
+        self.last_name: str = last_name
+        self.middle_name: str = middle_name
         self.email: str = email
         self.avatar: str = avatar
 

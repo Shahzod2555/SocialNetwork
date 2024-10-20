@@ -5,7 +5,7 @@
 {% block content %}
 
 <form method="post" class="form-control m-auto">
-    {{ form.csrf_token }}
+    {{ form.hidden_tag() }}
     <div class="m-4">
     {{ form.login.label }}
     {{ form.login(class="form-control", placeholder="Логин")}}

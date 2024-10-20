@@ -11,8 +11,10 @@ from .model.comment import Comment
 from .model.user import User
 from .model.like import Like
 from .model.viewing import Viewing
+from .model.actual import Actual, ActualVideo, ActualAudio, ActualImage
 
 from .routes.comment import comment_blueprint
+from .routes.actual import actual
 from .routes.publication import publication
 from .routes.like import like_blueprint
 from .routes.reg_auth import reg_auth
@@ -37,6 +39,8 @@ def create_app(config_class=Config):
     app.register_blueprint(message_view, name='message_blueprint')
     app.register_blueprint(main, name='main_blueprint')
     app.register_blueprint(user, name='user_blueprint')
+    app.register_blueprint(actual, name='actual_blueprint')
+
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -58,5 +62,11 @@ def create_app(config_class=Config):
     admin.add_view(ModelView(User, db.session, name="Пользователи"))
     admin.add_view(ModelView(Viewing, db.session, name="Просмотры"))
     admin.add_view(ModelView(Like, db.session, name="Лайки"))
+
+
+    admin.add_view(ModelView(Actual, db.session, name="Актуальное"))
+    admin.add_view(ModelView(ActualImage, db.session, name="Актуально фотки"))
+    admin.add_view(ModelView(ActualAudio, db.session, name="Актуальное аудио"))
+    admin.add_view(ModelView(ActualVideo, db.session, name="Актуальное видео"))
 
     return app

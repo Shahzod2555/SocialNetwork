@@ -1,6 +1,8 @@
+import os
+from flask import current_app
+
 import os.path
 import secrets
-from flask import current_app
 from PIL import Image
 
 from .model.like import Like
@@ -8,6 +10,29 @@ from .model.comment import Comment
 from .model.publication import Publication
 from flask_login import current_user
 
+
+def delete_media_files(publication):
+    # Удаляем изображения
+    for image in publication.images:
+        image_path = os.path.join(current_app.config['SERVER_PATH_PUBLICATION_IMAGE'], image.image)
+        if os.path.exists(image_path):
+            os.remove(image_path)
+            print("все ок")
+
+    # Удаляем видео
+    for video in publication.videos:
+        video_path = os.path.join(current_app.config['SERVER_PATH_PUBLICATION_VIDEO'], video.video)
+        if os.path.exists(video_path):
+            os.remove(video_path)
+            print("все ок")
+
+
+    # Удаляем аудио
+    for audio in publication.audios:
+        audio_path = os.path.join(current_app.config['SERVER_PATH_PUBLICATION_AUDIO'], audio.audio)
+        if os.path.exists(audio_path):
+            os.remove(audio_path)
+            print("все ок")
 
 def save_media(media, folder):
     random_hex = secrets.token_hex(12)
@@ -17,31 +42,24 @@ def save_media(media, folder):
     media.save(media_path)
     return media_fn
 
-
-def save_video_publication(video):
-    return save_media(video, 'SERVER_PATH_PUBLICATION_VIDEO')
-
-
-def save_audio_publication(audio):
-    return save_media(audio, 'SERVER_PATH_PUBLICATION_AUDIO')
-
-
-def save_image_publication(image):
-    return save_media(image, 'SERVER_PATH_PUBLICATION_IMAGE')
-
-
 def save_ava_picture(picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(
-        current_app.config['SERVER_PATH_AVATAR'],
-        picture_fn)
+    picture_path = os.path.join(current_app.config['SERVER_PATH_AVATAR'], picture_fn)
     i = Image.open(picture)
     i.thumbnail((125, 125))
     i.save(picture_path)
     return picture_fn
 
+def save_image(picture):
+    _, f_ext = os.path.splitext(picture.filename)
+    picture_fn = secrets.token_hex(12) + f_ext
+    picture_path = os.path.join(current_app.config['SERVER_PATH_ACTUAL'], picture_fn)
+    i = Image.open(picture)
+    i.thumbnail((150, 150))
+    i.save(picture_path)
+    return picture_fn
 
 def get_publication_data(author_id=None, publications=None):
     if publications is None:

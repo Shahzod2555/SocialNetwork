@@ -88,7 +88,7 @@
 				</div>
 				<hr>
 				<form method="post" action="{{ url_for('comment_blueprint.comment', publication_id=publication.id) }}">
-					{{ form.csrf_token }}
+					{{ form.hidden_tag() }}
 					{{ form.content.label(class="m-1") }}
 					<div class="d-flex">
 						{{ form.content(class="form-control me-2", placeholder="Ваш комментарий") }}

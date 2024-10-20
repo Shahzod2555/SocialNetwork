@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, flash
-from ..functions import get_publication_data, save_media
+from ..functions import get_publication_data, save_media, delete_media_files
 from ..forms import PublicationCreate, PublicationUpdate
 from flask_login import login_required, current_user
-from ..model.publication import Publication
+from ..model.publication import Publication, PublicVideo, PublicImage, PublicAudio
 from ..forms import CommentAdd
 from ..extentions import db
 
@@ -22,9 +22,6 @@ def publication_create():
             content=form.content.data,
             hashtags=form.hashtags.data,
             is_published=form.is_publication.data,
-            image=save_media(form.image.data, "SERVER_PATH_PUBLICATION_IMAGE") if form.image.data else None,
-            video=save_media(form.video.data, "SERVER_PATH_PUBLICATION_VIDEO") if form.video.data else None,
-            audio=save_media(form.audio.data, "SERVER_PATH_PUBLICATION_AUDIO") if form.audio.data else None,
             location=form.location.data,
             mentions=form.mentions.data,
         )
@@ -32,23 +29,45 @@ def publication_create():
         try:
             db.session.add(new_publication)
             db.session.commit()
+
+            for image in form.images.data:
+                if image:
+                    image_filename =  save_media(image, "SERVER_PATH_PUBLICATION_IMAGE")
+                    new_image = PublicImage(image=image_filename, publication_id=new_publication.id)
+                    db.session.add(new_image)
+                    db.session.commit()
+
+            for video in form.videos.data:
+                if video:
+                    video_filename = save_media(video, "SERVER_PATH_PUBLICATION_VIDEO")
+                    new_video = PublicVideo(video=video_filename, publication_id=new_publication.id)
+                    db.session.add(new_video)
+                    db.session.commit()
+
+
+            for audio in form.audios.data:
+                if audio:
+                    audio_filename = save_media(audio, "SERVER_PATH_PUBLICATION_AUDIO")
+                    new_audio = PublicAudio(audio=audio_filename, publication_id=new_publication.id)
+                    db.session.add(new_audio)
+                    db.session.commit()
+
             return redirect(request.referrer or "/")
         except Exception as e:
+            db.session.rollback()
             print(f"Ошибка при создании публикации: {e}")
             flash("При создании публикации произошла ошибка", "danger")
             return redirect(request.referrer or "/")
-    else:
-        return render_template('publication/create.html', form=form)
+    return render_template('publication/create.html', form=form)
 
 
-@publication.route('/publication/update/<int:id_publication>',
-                   methods=['POST', 'GET'])
+@publication.route('/publication/update/<int:id_publication>', methods=['POST', 'GET'])
 @login_required
 def publication_update(id_publication):
     publication_id = Publication.query.get_or_404(id_publication)
     form = PublicationUpdate()
 
-    if publication_id.author == current_user.id:
+    if publication_id.author == current_user:
         flash("У вас нет доступа к этой публикации", "danger")
         return redirect(request.referrer or "/")
 
@@ -75,7 +94,7 @@ def publication_update(id_publication):
             return redirect(request.referrer or "/")
 
     return render_template(
-        'publication/update.html',
+        template_name_or_list='publication/update.html',
         form=form, publication_id=publication_id
     )
 
@@ -83,17 +102,21 @@ def publication_update(id_publication):
 @publication.route(rule='/publication/delete/<int:id_publication>', methods=['POST', 'GET'])
 @login_required
 def publication_delete(id_publication):
-    publication_id = Publication.query.get(id_publication)
+    publication_record = Publication.query.get(id_publication)
 
-    if publication_id.author == current_user.id:
+    if publication_record and publication_record.author == current_user.id:
         try:
-            db.session.delete(publication_id)
+            delete_media_files(publication_record)
+            db.session.delete(publication_record)
             db.session.commit()
+
             return redirect('/')
         except Exception as e:
-            print(f"Ошибка при создании публикации: {e}")
+            db.session.rollback()
+            print(f"Ошибка при удалении публикации: {e}")
+            return redirect('/'), flash("Ошибка при удалении публикации", "danger")
     else:
-        return redirect('/'), flash("Соси хуй", "danger")
+        return redirect('/'), flash("У вас нет прав на удаление этой публикации", "danger")
 
 
 @publication.route(rule='/publication/<int:id_publication>',  methods=['POST', 'GET'])

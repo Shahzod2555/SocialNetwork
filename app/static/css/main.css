@@ -12,14 +12,6 @@ body{
     top: 0;
 }
 
-
-.page{
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
 .content{
     max-height: 800px;
     margin: 0 auto;
@@ -27,22 +19,10 @@ body{
     flex: 1 1 auto;
 }
 
-.сard_footer.button {
-    border: 0;
-    padding: 0;
-    margin: 0;
-    background: transparent;
-}
-
-.unlike{
-    color: red;
-}
-
 a{
     color: #dee2e6;
     text-decoration: none;
 }
-
 
 hr{
     position: sticky;

@@ -9,12 +9,12 @@
     <title>{% block title%} {% endblock %}</title>
 </head>
 <body data-bs-theme="dark">
-    <header class="header">{% include 'main/_header.html'%}</header>
+    <header class="header" style="z-index: 1;">{% include 'main/_header.html'%}</header>
     <main class="container">
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <div class="flash-messages">
+                <div class="flash-messages ">
                     {% for category, message in messages %}
                         <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
                             {{ message }}
@@ -39,7 +39,7 @@
       let bsAlert = new bootstrap.Alert(alert);
       bsAlert.close();
     });
-  }, 3000); // Время в миллисекундах (3 секунд)
+  }, 300000); // Время в миллисекундах (3 секунд)
 </script>
 
 
